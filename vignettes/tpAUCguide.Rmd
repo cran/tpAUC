@@ -1,0 +1,300 @@
+---
+title: "Package \"tpAUC\""
+author: "Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu."
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tpAUC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+<a id="top"></a>
+
+> [Basic Info](#basic)
+
+> [Methodology](#method)
+
+> [Functions](#func)
+
+> [Quick Start](#quick)
+
+> [Reference](#ref)
+
+<a id="basic"></a>
+
+## Basic Info 
+When people evaluate the performance of a diagnostic test, it is important to control both True Positive Rate (TPR) and False Positive Rate (FPR). In the literature, most researchers propose the partial area under the ROC curve (pAUC) with restrictions on FPR to assess a binary classification system, which is named as FPR pAUC. It could be artificially designed to measure the area controlled by TPR, but is often misleading conceptually and practically. A new and intuitive method, named two-way pAUC, is provided in [Yang et al. (2016)][1], which focuses directly on the partial area under the ROC curve with both horizontal and vertical restrictions. This package solves two-way pAUC estimation based on a non-parametric method in [Yang et al. (2016)][1]. Moreover, estimation and inference of FPR partial AUC and FNR parital ODC are included in this package, utilizing algorithms proposed in [Yang et al. (2016)][2] (see [Methodology](#method) for details).   
+
+<a id="method"></a>
+
+## Methodology
+
+### Estimation: 
+
+#### pAUC:
+The ROC curve is a well-established graphical tool used to evaluate performance of a classifier in accurately discriminating between subjects from different populations (e.g., diseased and  healthy individuals). Let  $F$ and $G$ be distribution functions of  random variables $X$ and $Y$ corresponding to independent populations. Let  $G^{-1}(t)=\inf \{y: G(y)\geq t\}$ be the quantile function of $G$, $0< t< 1$. Let
+$S_F(t)$ and $S_G(t)$ be the corresponding survival functions $S_F(t)=1-F(t)$ and $S_G(t)=1-G(t)$.
+For $t\in (0,1)$, the ROC curve  is defined as  $ROC(t) =1-F\{G^{-1}(1-t)\}$ or $ROC(t)=S_{F}\{S_{G}^{-1}(t)\}$, where  $t$ is the value of FPR and $S_G^{-1}(t)  = G^{-1}(1-t)$. The
+ROC curve is not a  convenient tool for comparisions, in particular  when two ROC curves cross.
+ A summary measure of an ROC curve  can be found by integrating the ROC curve over the the range of FPR values to obtain the area under the ROC curve as
+ $AUC=\int^{1}_{0} ROC(t)\mathrm{d}t =\int^{-\infty}_{\infty}S_{F}(u) \mathrm{d}S_{G}(u)$. For economical and practical purposes, it is common to hold the FPR to a low level.
+ When interest is restricted to a sub-region of the ROC space, the partial area under the ROC curve, $pAUC(P_0)=\int^{P_0}_{0} ROC(p)\mathrm{d}p$ for the threshold value of FPR $P_0 \in (0,1)$, can provide a useful summary measure.
+
+Let $\mathbf{X}=\{X_{i}, i= 1,...,m\}$ and $\mathbf{Y}=\{Y_{i}, i= 1,...,n\}$ be random samples from the distribution functions $F(x)$ and $G(y)$, respectively. 
+A Mann-Whitney nonparamteric method for pAUC is (`method='WM'`) 
+$$
+\widehat{pAUC}(P_0 ) = \frac{1}{mn}\sum^{m}_{i=1}\sum^{n}_{j=1}I(X_i\ge Y_j)I\{Y_j\ge S^{-1}_{G,n}(P_0)\}, 
+$$
+where $S_{G,n}^{-1}(t)=\inf \left\{x\in R; t\geq S_{G,n}(x)\right\}$   and $S_{F,m}(\cdot)$ and $S_{G,n}(\cdot)$ are estimators of $S_F$ and $S_G$ based on empirical distributions.  
+
+[Wang and Chang (2011)][4] propose the following method (`method = 'expect'`),
+$$\widetilde{pAUC}(P_0) = P_{0} - \frac{1}{m} \overset{m}{\underset{i=1}{\sum}} \min \{ S_{G, n}(X_{i}), P_{0}\}.$$
+
+[Yang et al. (2016)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pAUC}(P_0)$, in particular, 
+$$
+\widetilde{pAUC}_{jack}(P_0)=\frac{1}{n+m}\sum^{n+m}_{h=1}{V}_h(P_0), 
+$$
+where
+$$
+{V}_h(P_0)=(n+m)\widetilde{pAUC}(P_0 )-(n+m-1)\widetilde{pAUC}_h(P_0),
+$$
+and
+$$
+\widetilde{pAUC}_h(P_0)=\left\{\begin{array}{ll}
+ P_{0} - \frac{1}{m-1} \sum \limits_{ i \ne h }^m \min \{ S_{G, n}(X_{i}), P_{0}\} & ~\text{ $1 \leq h \leq m$}\\
+ P_{0} - \frac{1}{m}  \sum \limits_{ i=1 }^m \min \{ S_{G,n-1, h-m}(X_{i}), P_{0}\} & ~ \text{$m+1 \leq h \leq m+n,$}
+\end{array} \right.
+$$
+where $$S_{G,n-1, h-m}(X_{i})=\frac{1}{n-1} \overset{n}{\underset{j=1, j \neq h-m}{\sum}}I(Y_j>X_{i}). $$
+
+#### pODC: 
+The ordinal dominance curve (ODC) introduced by [Bamber (1973)][3], describes the association between true negative rate (TNR) and false negative rate (FNR), $ODC(t)= G\{F^{-1}(t)\}$ where $t \in (0,1)$. The area under the ODC, $\int^{1}_{0} ODC(t)\mathrm{d}t =  \int^{\infty}_{-\infty}G(u)\mathrm{d}F(u)$, is a commonly used summary measure. A partial area under the ODC (pODC)  from $0$ to $P_0$ is taken as $pODC(P_0) =  \int^{P_0}_{0} ODC(t)\mathrm{d}t$.
+
+A Mann-Whitney nonparamteric method for pAUC is (`method='WM'`) 
+$$\widehat{pODC}(P_0)=\frac{1}{mn}\sum^{m}_{i=1}\sum^{n}_{j=1}I(Y_j\le X_i
+ )I\{X_i\le F^{-1}_{m}(P_0)\},$$
+where $F_{m}^{-1}(P_0)$ is an empirical quantile estimate at $P_0$ and $F_m(\cdot)$ and $G_{n}(\cdot)$ are the empirical distributions of $F(\cdot)$ and $G(\cdot)$.
+
+[Yang et al. (2016)][2] propose the following method (`method = 'expect'`),
+$$\widetilde{pODC}(P_0) = P_{0} - \frac{1}{n} \overset{n}{\underset{j=1}{\sum}} \min \{ F_m(Y_{j}), P_{0}\}.$$
+[Yang et al. (2016)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pODC}(P_0)$, in particular, 
+$$
+\widetilde{pODC}_{jack}(P_0)=\frac{1}{n+m}\sum^{n+m}_{h=1}\check{U}_h(P_0), 
+$$
+where
+$$
+\check{U}_h(P_0)=(n+m)\widetilde{pODC}(P_0)-(n+m-1)\widetilde{pODC}_h(P_0)
+$$
+and
+$$
+\widetilde{pODC}_h(P_0)=\left\{\begin{array}{ll}
+ P_{0} - \frac{1}{n-1} \sum \limits_{j \ne h}^n  \min \{ F_{m}(Y_{j}), P_{0}\} & ~\text{ $1 \leq h \leq n$}\\
+ P_{0} - \frac{1}{n} \sum \limits_{j = 1 }^n \min \{F_{m-1, h-n}(Y_{j}), P_{0}\} & ~ \text{$n+1 \leq h \leq m+n,$}
+\end{array} \right.
+$$
+where $$F_{m-1, h-n}(Y_{j})=\frac{1}{m-1} \overset{m}{\underset{i=1, i \neq h-n}{\sum}}I(X_{i} \leq Y_j). $$
+
+#### two-way pAUC:
+The definition and estimation of two-way pAUC are proposed intuitively. Given bounds $p_0$ and $q_0$, two-way pAUC is formulated as
+$$
+U(p_0,q_0)  =\int^{p_0}_{S_G\{S^{-1}_F(q_0)\}}S_F\{S^{-1}_{G}(u)\}du-[p_0-S_G\{S^{-1}_F(q_0)\}]q_0 .
+$$ 
+Alternatively, from a probability perspective, ${U}(p_0,q_0)$ can be transformed as:
+$$
+P\{  \mathbf{Y} < \mathbf{X}, \mathbf{X}\le S_F^{-1}(q_0),  \mathbf{Y}\ge S_G^{-1}(p_0)\}.
+$$
+A trimmed Mann-Whitney U-statistics estimator directly following the above expression is
+$$
+\frac{1}{mn}\sum^{m}_{i=1}\sum^{n}_{j=1}V_{i,j} (p_0 , q_0),
+$$
+where $V_{i,j} (p_0 , q_0) = I \{ Y_j\le X_i ,  X_i\le S^{-1}_{F,m}(q_0), Y_j\ge S^{-1}_{G,n}(p_0)   \}$. 
+
+
+[Back to Top](#top)
+
+### Inference:
+ 
+#### pAUC:
+[Yang et al. (2016)][2] prove that, under certain conditions,
+$$
+\sqrt{m+n}\{\widehat{pAUC}(P_0)-pAUC(P_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}\right\},  m,n\to \infty,   \nonumber
+$$
+where $\frac{m}{m+n}\to \lambda$,
+$$
+\sigma^2_1(P_0)=\int^{S_G^{-1}(P_0)}_{+\infty}\{P_0-S_G(t)\}^2dS_F(t)-\left\{\int^{S_G^{-1}(P_0)}_{+\infty} S_F(t)dS_G(t)\right\}^2,
+$$
+and
+$$
+\sigma^2_2(P_0)=\int^{S_G^{-1}(P_0)}_{+\infty}[S_F(t)-S_F\{S_G^{-1}(P_0)\}]^2dS_G(t)-\left(\int^{S_G^{-1}(P_0)}_{+\infty}[S_F(t)-S_F\{S_G^{-1}(P_0)\}]dS_G(t)\right)^2.
+$$
+Moveover, under same conditions,
+$$\sqrt{m+n}\{\widetilde{pAUC}_{}(P_0)-pAUC(P_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}\right\},  m,n\to \infty.$$
+and 
+$$
+\sqrt{m+n}\{\widetilde{pAUC}_{jack}(P_0)-pAUC(P_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}\right\},  m,n\to \infty.  
+$$  
+Consider the jackknife variance estimator 
+$$S^2_{\widetilde{pAUC}}={(m+n)}^{-1}\sum^{m+n}_{h=1}\{{V}_h(P_0)-\widetilde{pAUC}_{jack}(P_0)\}^2.$$
+[Yang et al. 2016][2] prove that 
+$$
+S^2_{\widetilde{pAUC}}(P_0)=\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}+o_p(1).
+$$
+Therefore, 
+$$
+\frac{\sqrt{m+n}\{\widetilde{pAUC}_{jack}(P_0)-pAUC(P_0)\}}{\sqrt{S^2_{\widetilde{pAUC}}(P_0)}}\stackrel{d}{\to}N(0,1).
+$$
+
+#### pODC:
+In ODC cases, we have 
+$$
+\sqrt{m+n}\{\widehat{pODC}(P_0)-pODC(P_0)\}\stackrel{d}{\to}N\left(0,\frac{\sigma^{2}_{3}}{1-\lambda}+\frac{\sigma^{2}_{4}}{\lambda}\right),  m,n\to \infty,   
+$$
+where
+$$
+\sigma^2_3=\int^{F^{-1}(P_0)}_{-\infty}\{P_0-F(t)\}^2dG(t)-\left\{\int^{F^{-1}(P_0)}_{-\infty} G(t)dF(t)\right\}^2,
+$$
+and
+$$
+\sigma^2_4=\int^{F^{-1}(P_0)}_{-\infty}[G(t)-G\{F^{-1}(P_0)\}]^2dF(t)-\left(\int^{F^{-1}(P_0)}_{-\infty}[G(t)-G\{F^{-1}(P_0)\}]dF(t)\right)^2.
+$$
+Similarly, 
+$$
+\sqrt{m+n}\{\widetilde{pODC}_{}(P_0)-pODC(P_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^{2}_{3}(P_0)}{1- \lambda}+\frac{\sigma^{2}_{4}(P_0)}{\lambda}\right\},    
+$$
+and 
+$$\sqrt{m+n}\{\widetilde{pODC}_{jack}(P_0)-pODC(P_0)\}\stackrel{d}{\to}N\left(0,\frac{\sigma^{2}_{3}}{1- \lambda}+\frac{\sigma^{2}_{4}}{\lambda}\right).$$
+Together with 
+$$
+\begin{align*}
+S^2_{\widetilde{pODC}}& ={(m+n)}^{-1}\sum^{m+n}_{h=1}\{\check{U}_h(P_0)-\widetilde{pODC}_{jack}(P_0)\}^2\\
+&=\frac{\sigma^{2}_{3}(P_0)}{1-\lambda}+\frac{\sigma^{2}_{4}(P_0)}{\lambda}+o_p(1).
+\end{align*}
+$$
+and 
+$$
+\frac{\sqrt{m+n}\{\widetilde{pODC}_{jack}(P_0)-pODC(P_0)\}}{\sqrt{S^2_{\widetilde{pODC}}(P_0)}}\stackrel{d}{\to}N(0,1).
+$$
+
+
+#### two-way pAUC:
+From [Yang et al. (2016)][1], we have, under certain conditions, 
+$$
+\sqrt{m+n}\{\hat{U}(p_0,q_0)-U(p_0,q_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^2_5}{\lambda}+\frac{\sigma^2_6}{1-\lambda}\right\}, \quad \text{as } \;\; m,n\to \infty,
+$$
+where 
+$$
+\begin{align}
+\sigma^2_5= &F\{G^{-1}(1-p_0)\}[G\{F^{-1}(1-q_0)\}-(1-p_0)]^2+\int^{F^{-1}(1-q_0)}_{G^{-1}(1-p_0)}[G\{F^{-1}(1-q_0)\}-G(t)]^2dF(t)\nonumber\\
+&-\left\{\int^{F^{-1}(1-q_0)}_{G^{-1}(1-p_0)}F(t)dG(t)\right\}^2\nonumber,
+\end{align}
+$$
+and
+$$
+\begin{align}
+\sigma^2_6=&[1-q_0-F\{G^{-1}(1-p_0)\}]^2(1-p_0)\nonumber+ \int^{F^{-1}(1-q_0)}_{G^{-1}(1-p_0)}\{1-q_0-F(t)\}^2dG(t) \\ \nonumber
+& -\left\{\int^{F^{-1}(1-q_0)}_{G^{-1}(1-p_0)}G(t)dF(t)\right\}^2\nonumber.
+\end{align}
+$$
+
+[Back to Top](#top)
+
+<a id='func'></a>
+
+## Functions
+
+This packages contains following functions: 
+
+1. `tproc.est`
+  : This function estimates two-way parital AUC given response, predictor and pre-specific FPR/TPR constraints via the method in [Yang et al. (2016)][1]. The plot of corresponding ROC curve with pre-specific FPR/TPR is also generated.
+
+1. `proc`
+  : This function estimates and infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+
+1. `proc.est`
+  : This function estimates FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+
+1. `proc.ci`
+  : This function infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+  
+1. `podc`
+  : This function estimates and infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+
+
+1. `podc.est`
+  : This function estimates FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+  
+1. `podc.ci`
+  : This function infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+
+
+[Back to Top](#top)
+
+
+<a id='quick'></a>
+
+## Quick Start
+
+The purpose of this section is to show users the basic usage of this package. We will briefly go through main functions, see what they can do and have a look at outputs. An detailed example of complete procedures of estimation and inference will be presented to give users a general sense of the pakcage. 
+
+
+
+First, we load `tpAUC` package:
+
+```{r}
+library(tpAUC)
+```
+
+Then, we estimate two-way partial AUC with date from package `pROC`. 
+
+```{r, fig.height=5 , fig.width=5, fig.align='center'}
+library('pROC')
+data(aSAH)
+tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2),plot=T)
+#estimate two-way partial AUC and generate a plot
+```
+`tproc.est` returns an estimation and a plot of ROC curve with FPR/TPR constrains. The red and blue lines in the plot represet the TPR and FPR constrains. The grey region is corresponding two-way partial AUC.
+
+Then, we turn to FPR partial AUC.
+```{r,fig.height=5 , fig.width=5, fig.align='center'}
+proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=T)
+# use method 'expect' to estimate partial AUC and draw a plot
+proc.ci(aSAH$outcome,aSAH$s100b, cp=0.95 ,threshold=0.8,method='expect')
+# use method 'expect' to infer partial AUC
+```
+The red line in the plot is the FPR constrain. The grep part is FPR partial AUC.
+Alternatively, we can use `proc` to do both estimation and inference simultaneously.
+```{r}
+proc(aSAH$outcome,aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.95, plot=F)
+# set ci=TRUE to get confidence interval
+```
+Similar procedures on FNR partial ODC are as follows.
+```{r,fig.height=5 , fig.width=5, fig.align='center'}
+podc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=T)
+# estimate FNR partial ODC with method 'expect'
+podc.ci(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8, cp=0.97)
+# infer FNR partial ODC with method 'expect'
+```
+The graph plots TNR versus FNR. `podc` aggregates the functions of `podc.est` and `podc.ci`.
+
+```{r}
+podc(aSAH$outcome, aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.97, plot=F)
+# inference and estimation
+```
+
+
+[Back to Top](#top)
+
+
+<a id="ref"></a>
+
+## Reference 
+
+1. Wang Z, Chang Y C I. *Marker selection via maximizing the partial area under the ROC curve of linear risk scores*. ***Biostatistics***, 2011, **12(2): 369-385**.
+1. Yang H, Lu K, Lyu X, et al. *Two-Way Partial AUC and Its Properties*. ***arXiv:1508.00298***, 2016.
+1. Yang H, Lu K, Zhao Y. *A nonparametric approach for partial areas under ROC curves and ordinal dominance curves*. ***Statistica Sinica***. 2016.
+
+
+[1]: http://arxiv.org/abs/1508.00298
+[2]: http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf
+[3]: http://www.sciencedirect.com/science/article/pii/0022249675900012
+[4]: http://www.ncbi.nlm.nih.gov/pubmed/20729218

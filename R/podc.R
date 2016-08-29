@@ -1,0 +1,46 @@
+#' Partial ODC Estimation and Inference
+#'
+#' Estimate and infer the area of region under ODC curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+#' 
+#' @param response a factor, numeric or character vector of responses; 
+#'    typically encoded with 0 (negative) and 1 (positive). 
+#'    Only two classes can be used in a ROC curve. If its levels are not 0/1,
+#'    the first level will be defaultly regarded as negative.
+#'    
+#' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
+#' @param threshold numeric; false negative rate (FNR) constraint.
+#' @param method methods to estimate FNR-pODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @param ci logic; compute the confidence interval of estimation?
+#' @param cp numeric; coverage probability of confidence interval. 
+#' @param plot  logic; plot the ODC curve? 
+#' @param smooth if \code{TRUE}, the ODC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.
+#' 
+#' @details This function estimates and infers FNR partial ODC given response, predictor and pre-specific FNR constraint. The plot of corresponding ODC curve with pre-specific FNR is generated.
+#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @return Estimation and Inference of FNR partial ODC. 
+#'
+#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+#' @seealso \code{\link[tpAUC]{podc.est}}, \code{\link[tpAUC]{podc.ci}}
+#'
+#' @examples
+#' 
+#' library('pROC')
+#' data(aSAH)
+#' podc(aSAH$outcome, aSAH$s100b,threshold=0.9, method='expect',ci=TRUE, cp=0.95, plot=TRUE)
+#' 
+#' @export 
+#'
+#' @import pROC
+#' @importFrom   stats  ecdf approxfun runif
+#' @importFrom graphics lines abline
+#'          
+#'
+podc=function(response,predictor,threshold=0.9, method='MW',ci=TRUE, cp=0.95, plot=TRUE,smooth=FALSE) { 
+  podc=podc.est(response,predictor,threshold=threshold, method=method, plot=plot,smooth=smooth)
+  l=list(podc=podc)
+  if (ci==TRUE){
+    c=podc.ci(response,predictor, cp=cp ,threshold=threshold,method=method )
+    l[['ci']]=c
+  }
+  return(l)
+}
