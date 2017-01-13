@@ -16,7 +16,7 @@
 #'
 #' @return Estimation of two-way partial AUC and plot of ROC curve. 
 #'
-#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[pROC]{roc}}, \code{\link[tpAUC]{podc.est}}, \code{\link[tpAUC]{proc.est}}
 #'
 #' @examples

@@ -39,7 +39,7 @@ tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2),plot=TRUE)
 
 }
 \author{
-Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 }
 \seealso{
 \code{\link[pROC]{roc}}, \code{\link[tpAUC]{podc.est}}, \code{\link[tpAUC]{proc.est}}

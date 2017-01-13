@@ -16,7 +16,7 @@
 #'          \code{MW}: Mann-Whitney statistic. method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
 #' @return Confidence interval of FPR partial AUC. 
 #'
-#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[tpAUC]{tproc.est}}, \code{\link[tpAUC]{podc.ci}}
 #'
 #' @examples

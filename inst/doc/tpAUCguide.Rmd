@@ -1,6 +1,6 @@
 ---
 title: "Package \"tpAUC\""
-author: "Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu."
+author: "Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

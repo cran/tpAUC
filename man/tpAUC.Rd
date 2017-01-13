@@ -18,7 +18,7 @@ Tools of estimation and inference of two-way partial AUC, FPR partial AUC and FN
 }
 \author{
 \tabular{l}{
-  Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu. \cr
+  Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao. \cr
   Maintainer: Xiang Lyu  <lyu17@purdue.edu> 
 }
 }

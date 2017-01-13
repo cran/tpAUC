@@ -41,7 +41,7 @@ proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=TRUE)
 
 }
 \author{
-Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 }
 \seealso{
 \code{\link[tpAUC]{tproc.est}}, \code{\link[tpAUC]{podc.est}}

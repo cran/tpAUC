@@ -45,7 +45,7 @@ proc(aSAH$outcome, aSAH$s100b,threshold=0.9, method='expect',ci=TRUE, cp=0.95, p
 
 }
 \author{
-Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 }
 \seealso{
 \code{\link[pROC]{roc}}, \code{\link[tpAUC]{tproc.est}}, \code{\link[tpAUC]{proc.est}}, \code{\link[tpAUC]{proc.ci}}

@@ -16,7 +16,7 @@
 #'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
 #' @return Estimation of FNR partial ODC and plot of ODC curve. 
 #'
-#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[tpAUC]{proc.est}}
 #'
 #' @examples

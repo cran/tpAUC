@@ -17,7 +17,7 @@
 #'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
 #' @return Estimation of FPR partial AUC and plot of ROC curve. 
 #'
-#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+#' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[tpAUC]{tproc.est}}, \code{\link[tpAUC]{podc.est}}
 #'
 #' @examples

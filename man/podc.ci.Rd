@@ -38,7 +38,7 @@ podc.ci(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8, cp=0.97)
 
 }
 \author{
-Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu.
+Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 }
 \seealso{
 \code{\link[tpAUC]{proc.ci}}
