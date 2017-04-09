@@ -4,8 +4,7 @@
 \alias{tproc.est}
 \title{Two-Way Partial AUC Estimation}
 \usage{
-tproc.est(response, predictor, threshold = c(1, 0), plot = TRUE,
-  smooth = FALSE)
+tproc.est(response, predictor, threshold = c(1, 0), smooth = FALSE)
 }
 \arguments{
 \item{response}{a factor, numeric or character vector of responses; 
@@ -17,24 +16,22 @@ the first level will be defaultly regarded as negative.}
 
 \item{threshold}{a length-two numeric vector; the first element is FPR threshold, the second is TPR.}
 
-\item{plot}{logic; plot the ROC curve?}
-
 \item{smooth}{if \code{TRUE}, the ROC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.}
 }
 \value{
-Estimation of two-way partial AUC and plot of ROC curve.
+Estimate of two-way partial AUC.
 }
 \description{
 Estimate the area of region under ROC curve under pre-specific FPR/TPR constraints (two-way partial AUC). See \href{http://arxiv.org/abs/1508.00298}{Yang et al., 2016} for details.
 }
 \details{
-This function estimates two-way partial AUC given response, predictor and pre-specific FPR/TPR constraints. The plot of corresponding ROC curve with pre-specific FPR/TPR is generated.
+This function estimates two-way partial AUC given response, predictor and pre-specific FPR/TPR constraints.
 }
 \examples{
 
 library('pROC')
 data(aSAH)
-tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2),plot=TRUE)
+tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2))
 
 
 }

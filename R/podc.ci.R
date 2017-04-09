@@ -1,6 +1,6 @@
 #' Partial ODC Inference
 #'
-#' Infer the area of region under ordinal dominance curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+#' Infer the area of region under ordinal dominance curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 #' 
 #' @param response a factor, numeric or character vector of responses; 
 #'    typically encoded with 0 (negative) and 1 (positive). 
@@ -9,10 +9,10 @@
 #' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
 #' @param cp numeric; coverage probability of confidence interval. 
 #' @param threshold numeric; false negative rate (FNR) constraint.
-#' @param method methods to estimate partial ODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @param method methods to estimate partial ODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' 
-#' @details This function infers FNR partial ODC given response, predictor and pre-specific FNR constraint. The plot of corresponding ODC curve with pre-specific FNR is generated.
-#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @details This function infers FNR partial ODC given response, predictor and pre-specific FNR constraint. 
+#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' @return Confidence interval of FNR partial ODC. 
 #'
 #' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
@@ -109,10 +109,10 @@ podc.ci=function(response,predictor, cp=0.95 ,threshold=0.9,method='MW') {
   S2= mean((Uh- mu)^2)
   
   if (method=='MW') {
-    mu=podc.est(response,predictor,threshold=threshold,method='MW',plot=FALSE,smooth=FALSE)
+    mu=podc.est(response,predictor,threshold=threshold,method='MW', smooth=FALSE)
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))
   } else if (method=='expect') {
-    mu=podc.est(response,predictor,threshold=threshold,method='expect',plot=FALSE,smooth=FALSE)
+    mu=podc.est(response,predictor,threshold=threshold,method='expect', smooth=FALSE)
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))
   } else if (method=='jackknife') { 
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))

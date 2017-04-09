@@ -23,7 +23,7 @@ vignette: >
 <a id="basic"></a>
 
 ## Basic Info 
-When people evaluate the performance of a diagnostic test, it is important to control both True Positive Rate (TPR) and False Positive Rate (FPR). In the literature, most researchers propose the partial area under the ROC curve (pAUC) with restrictions on FPR to assess a binary classification system, which is named as FPR pAUC. It could be artificially designed to measure the area controlled by TPR, but is often misleading conceptually and practically. A new and intuitive method, named two-way pAUC, is provided in [Yang et al. (2016)][1], which focuses directly on the partial area under the ROC curve with both horizontal and vertical restrictions. This package solves two-way pAUC estimation based on a non-parametric method in [Yang et al. (2016)][1]. Moreover, estimation and inference of FPR partial AUC and FNR parital ODC are included in this package, utilizing algorithms proposed in [Yang et al. (2016)][2] (see [Methodology](#method) for details).   
+When people evaluate the performance of a diagnostic test, it is important to control both True Positive Rate (TPR) and False Positive Rate (FPR). In the literature, most researchers propose the partial area under the ROC curve (pAUC) with restrictions on FPR to assess a binary classification system, which is named as FPR pAUC. It could be artificially designed to measure the area controlled by TPR, but is often misleading conceptually and practically. A new and intuitive method, named two-way pAUC, is provided in [Yang et al. (2016)][1], which focuses directly on the partial area under the ROC curve with both horizontal and vertical restrictions. This package solves two-way pAUC estimation based on a non-parametric method in [Yang et al. (2016)][1]. Moreover, estimation and inference of FPR partial AUC and FNR parital ODC are included in this package, utilizing algorithms proposed in [Yang et al. (2017)][2] (see [Methodology](#method) for details).   
 
 <a id="method"></a>
 
@@ -50,7 +50,7 @@ where $S_{G,n}^{-1}(t)=\inf \left\{x\in R; t\geq S_{G,n}(x)\right\}$   and $S_{F
 [Wang and Chang (2011)][4] propose the following method (`method = 'expect'`),
 $$\widetilde{pAUC}(P_0) = P_{0} - \frac{1}{m} \overset{m}{\underset{i=1}{\sum}} \min \{ S_{G, n}(X_{i}), P_{0}\}.$$
 
-[Yang et al. (2016)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pAUC}(P_0)$, in particular, 
+[Yang et al. (2017)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pAUC}(P_0)$, in particular, 
 $$
 \widetilde{pAUC}_{jack}(P_0)=\frac{1}{n+m}\sum^{n+m}_{h=1}{V}_h(P_0), 
 $$
@@ -75,9 +75,9 @@ $$\widehat{pODC}(P_0)=\frac{1}{mn}\sum^{m}_{i=1}\sum^{n}_{j=1}I(Y_j\le X_i
  )I\{X_i\le F^{-1}_{m}(P_0)\},$$
 where $F_{m}^{-1}(P_0)$ is an empirical quantile estimate at $P_0$ and $F_m(\cdot)$ and $G_{n}(\cdot)$ are the empirical distributions of $F(\cdot)$ and $G(\cdot)$.
 
-[Yang et al. (2016)][2] propose the following method (`method = 'expect'`),
+[Yang et al. (2017)][2] propose the following method (`method = 'expect'`),
 $$\widetilde{pODC}(P_0) = P_{0} - \frac{1}{n} \overset{n}{\underset{j=1}{\sum}} \min \{ F_m(Y_{j}), P_{0}\}.$$
-[Yang et al. (2016)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pODC}(P_0)$, in particular, 
+[Yang et al. (2017)][2] propose a jackknife method (`method = 'jackknife'`) based on $\widetilde{pODC}(P_0)$, in particular, 
 $$
 \widetilde{pODC}_{jack}(P_0)=\frac{1}{n+m}\sum^{n+m}_{h=1}\check{U}_h(P_0), 
 $$
@@ -115,7 +115,7 @@ where $V_{i,j} (p_0 , q_0) = I \{ Y_j\le X_i ,  X_i\le S^{-1}_{F,m}(q_0), Y_j\ge
 ### Inference:
  
 #### pAUC:
-[Yang et al. (2016)][2] prove that, under certain conditions,
+[Yang et al. (2017)][2] prove that, under certain conditions,
 $$
 \sqrt{m+n}\{\widehat{pAUC}(P_0)-pAUC(P_0)\}\stackrel{d}{\to}N\left\{0,\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}\right\},  m,n\to \infty,   \nonumber
 $$
@@ -135,7 +135,7 @@ $$
 $$  
 Consider the jackknife variance estimator 
 $$S^2_{\widetilde{pAUC}}={(m+n)}^{-1}\sum^{m+n}_{h=1}\{{V}_h(P_0)-\widetilde{pAUC}_{jack}(P_0)\}^2.$$
-[Yang et al. 2016][2] prove that 
+[Yang et al. (2017)][2] prove that 
 $$
 S^2_{\widetilde{pAUC}}(P_0)=\frac{\sigma^{2}_{1}(P_0)}{\lambda}+\frac{\sigma^{2}_{2}(P_0)}{1-\lambda}+o_p(1).
 $$
@@ -205,26 +205,26 @@ $$
 This packages contains following functions: 
 
 1. `tproc.est`
-  : This function estimates two-way parital AUC given response, predictor and pre-specific FPR/TPR constraints via the method in [Yang et al. (2016)][1]. The plot of corresponding ROC curve with pre-specific FPR/TPR is also generated.
+  : This function estimates two-way parital AUC given response, predictor and pre-specific FPR/TPR constraints via the method in [Yang et al. (2016)][1]. 
 
 1. `proc`
-  : This function estimates and infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+  : This function estimates and infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`.  
 
 1. `proc.est`
-  : This function estimates FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+  : This function estimates FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. 
 
 1. `proc.ci`
-  : This function infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ROC curve with pre-specific FPR is generated. 
+  : This function infers FPR parital AUC given response, predictor and pre-specific FPR constraint via method `'WM'`, `'expect'` and `'jackknife'`. 
   
 1. `podc`
-  : This function estimates and infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+  : This function estimates and infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`.  
 
 
 1. `podc.est`
-  : This function estimates FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+  : This function estimates FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`.  
   
 1. `podc.ci`
-  : This function infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`. The plot of corresponding ODC curve with pre-specific FNR is generated. 
+  : This function infers FNR parital ODC given response, predictor and pre-specific FNR constraint via method `'WM'`, `'expect'` and `'jackknife'`.  
 
 
 [Back to Top](#top)
@@ -249,35 +249,35 @@ Then, we estimate two-way partial AUC with date from package `pROC`.
 ```{r, fig.height=5 , fig.width=5, fig.align='center'}
 library('pROC')
 data(aSAH)
-tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2),plot=T)
-#estimate two-way partial AUC and generate a plot
+tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2) )
+#estimate two-way partial AUC 
 ```
-`tproc.est` returns an estimation and a plot of ROC curve with FPR/TPR constrains. The red and blue lines in the plot represet the TPR and FPR constrains. The grey region is corresponding two-way partial AUC.
+`tproc.est` returns an estimate of two-way partial AUC. 
 
 Then, we turn to FPR partial AUC.
 ```{r,fig.height=5 , fig.width=5, fig.align='center'}
-proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=T)
-# use method 'expect' to estimate partial AUC and draw a plot
+proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8 )
+# use method 'expect' to estimate partial AUC 
 proc.ci(aSAH$outcome,aSAH$s100b, cp=0.95 ,threshold=0.8,method='expect')
 # use method 'expect' to infer partial AUC
 ```
-The red line in the plot is the FPR constrain. The grep part is FPR partial AUC.
+
 Alternatively, we can use `proc` to do both estimation and inference simultaneously.
 ```{r}
-proc(aSAH$outcome,aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.95, plot=F)
+proc(aSAH$outcome,aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.95 )
 # set ci=TRUE to get confidence interval
 ```
 Similar procedures on FNR partial ODC are as follows.
 ```{r,fig.height=5 , fig.width=5, fig.align='center'}
-podc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=T)
+podc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8)
 # estimate FNR partial ODC with method 'expect'
 podc.ci(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8, cp=0.97)
 # infer FNR partial ODC with method 'expect'
 ```
-The graph plots TNR versus FNR. `podc` aggregates the functions of `podc.est` and `podc.ci`.
+`podc` aggregates the functions of `podc.est` and `podc.ci`.
 
 ```{r}
-podc(aSAH$outcome, aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.97, plot=F)
+podc(aSAH$outcome, aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.97)
 # inference and estimation
 ```
 
@@ -291,10 +291,10 @@ podc(aSAH$outcome, aSAH$s100b,threshold=0.8, method='expect',ci=TRUE, cp=0.97, p
 
 1. Wang Z, Chang Y C I. *Marker selection via maximizing the partial area under the ROC curve of linear risk scores*. ***Biostatistics***, 2011, **12(2): 369-385**.
 1. Yang H, Lu K, Lyu X, et al. *Two-Way Partial AUC and Its Properties*. ***arXiv:1508.00298***, 2016.
-1. Yang H, Lu K, Zhao Y. *A nonparametric approach for partial areas under ROC curves and ordinal dominance curves*. ***Statistica Sinica***. 2016.
+1. Yang H, Lu K, Zhao Y. *A nonparametric approach for partial areas under ROC curves and ordinal dominance curves*. ***Statistica Sinica***, 2017, **27: 357-371**.
 
 
 [1]: http://arxiv.org/abs/1508.00298
-[2]: http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf
+[2]: http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html
 [3]: http://www.sciencedirect.com/science/article/pii/0022249675900012
 [4]: http://www.ncbi.nlm.nih.gov/pubmed/20729218

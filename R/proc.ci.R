@@ -1,6 +1,6 @@
 #' Partial AUC Inference
 #'
-#' Infer the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+#' Infer the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 #' 
 #' @param response a factor, numeric or character vector of responses; 
 #'    typically encoded with 0 (negative) and 1 (positive). 
@@ -10,10 +10,10 @@
 #' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
 #' @param cp numeric; coverage probability of confidence interval. 
 #' @param threshold numeric; false positive rate (FPR) constraint.
-#' @param method methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @param method methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' 
-#' @details This function infers FPR partial AUC given response, predictor and pre-specific FPR constraint. The plot of corresponding ROC curve with pre-specific FPR is generated.
-#'          \code{MW}: Mann-Whitney statistic. method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+#' @details This function infers FPR partial AUC given response, predictor and pre-specific FPR constraint. 
+#'          \code{MW}: Mann-Whitney statistic. method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' @return Confidence interval of FPR partial AUC. 
 #'
 #' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
@@ -110,10 +110,10 @@ proc.ci=function(response,predictor, cp=0.95 ,threshold=0.9,method='MW') {
   
   
   if (method=='MW') {
-    mu=proc.est(response,predictor,threshold=threshold,method='MW',plot=FALSE,smooth=FALSE)
+    mu=proc.est(response,predictor,threshold=threshold,method='MW' ,smooth=FALSE)
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))
   } else if (method=='expect') {
-    mu=proc.est(response,predictor,threshold=threshold,method='expect',plot=FALSE,smooth=FALSE)
+    mu=proc.est(response,predictor,threshold=threshold,method='expect' ,smooth=FALSE)
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))
   } else if (method=='jackknife') { 
     ci=c(mu-qnorm(1- (1-cp)/2) * sqrt(S2)/sqrt(pos_size+neg_size) , mu- qnorm((1-cp)/2) *sqrt(S2)/sqrt(pos_size+neg_size))

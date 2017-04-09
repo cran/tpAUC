@@ -1,6 +1,6 @@
 #' Partial AUC Estimation
 #'
-#' Estimate the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+#' Estimate the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 #' 
 #' @param response a factor, numeric or character vector of responses; 
 #'    typically encoded with 0 (negative) and 1 (positive). 
@@ -9,13 +9,12 @@
 #'    
 #' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
 #' @param threshold numeric; false positive rate (FPR) constraint.
-#' @param method methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
-#' @param plot  logic; plot the ROC curve? 
+#' @param method methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' @param smooth if \code{TRUE}, the ROC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.
 #' 
-#' @details This function estimates FPR partial AUC given response, predictor and pre-specific FPR constraint. The plot of corresponding ROC curve with pre-specific FPR is generated.
-#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
-#' @return Estimation of FPR partial AUC and plot of ROC curve. 
+#' @details This function estimates FPR partial AUC given response, predictor and pre-specific FPR constraint.
+#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
+#' @return Estimate of FPR partial AUC. 
 #'
 #' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[tpAUC]{tproc.est}}, \code{\link[tpAUC]{podc.est}}
@@ -24,7 +23,7 @@
 #' 
 #' library('pROC')
 #' data(aSAH)
-#' proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=TRUE)
+#' proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8)
 #' 
 #' @export 
 #'
@@ -32,7 +31,7 @@
 #' @importFrom   stats  ecdf approxfun runif
 #' @importFrom graphics lines abline  
 #'        
-proc.est=function(response,predictor,threshold=0.9,method='MW',plot=TRUE,smooth=FALSE) {
+proc.est=function(response,predictor,threshold=0.9,method='MW', smooth=FALSE) {
   
   if ( any(is.na(response) | is.na(predictor))){
     warning('NA will be removed.')
@@ -135,21 +134,7 @@ proc.est=function(response,predictor,threshold=0.9,method='MW',plot=TRUE,smooth=
     Vh=(pos_size+neg_size)*pauctilde-(pos_size+neg_size-1)*pauch
     pauc=mean(Vh)
   }
-  
-  if (plot==TRUE) {
-    roc1=roc(response,predictor,smooth=smooth,plot=T)
-    xx=roc1$specificities
-    yy=roc1$sensitivities
-    xx2=sort(xx+1e-5 * runif(length(xx)))
-    f=approxfun(xx2,yy)
-    xx=roc1$specificities[(roc1$specificities > (1- FPR))  |(roc1$specificities == (1- FPR)) ]
-    yy=roc1$sensitivities[(length(roc1$sensitivities)-length(xx)):length(roc1$sensitivities)]
-    x0=c(seq(1-FPR,min(xx),length.out=1000),seq(min(xx),1,length.out=length(roc1$specificities)*10))
-    y0=f(x0)
-    lines(x0,y0,type='h',col='grey')
-    abline(v=(1-FPR),col='red',lwd="2")
-  }
-  
+ 
   return(pauc)
   
 }

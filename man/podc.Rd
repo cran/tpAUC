@@ -5,7 +5,7 @@
 \title{Partial ODC Estimation and Inference}
 \usage{
 podc(response, predictor, threshold = 0.9, method = "MW", ci = TRUE,
-  cp = 0.95, plot = TRUE, smooth = FALSE)
+  cp = 0.95, smooth = FALSE)
 }
 \arguments{
 \item{response}{a factor, numeric or character vector of responses; 
@@ -17,13 +17,11 @@ the first level will be defaultly regarded as negative.}
 
 \item{threshold}{numeric; false negative rate (FNR) constraint.}
 
-\item{method}{methods to estimate FNR-pODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.}
+\item{method}{methods to estimate FNR-pODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.}
 
 \item{ci}{logic; compute the confidence interval of estimation?}
 
 \item{cp}{numeric; coverage probability of confidence interval.}
-
-\item{plot}{logic; plot the ODC curve?}
 
 \item{smooth}{if \code{TRUE}, the ODC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.}
 }
@@ -31,17 +29,17 @@ the first level will be defaultly regarded as negative.}
 Estimation and Inference of FNR partial ODC.
 }
 \description{
-Estimate and infer the area of region under ODC curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+Estimate and infer the area of region under ODC curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 }
 \details{
-This function estimates and infers FNR partial ODC given response, predictor and pre-specific FNR constraint. The plot of corresponding ODC curve with pre-specific FNR is generated.
-         \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+This function estimates and infers FNR partial ODC given response, predictor and pre-specific FNR constraint. 
+         \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 }
 \examples{
 
 library('pROC')
 data(aSAH)
-podc(aSAH$outcome, aSAH$s100b,threshold=0.9, method='expect',ci=TRUE, cp=0.95, plot=TRUE)
+podc(aSAH$outcome, aSAH$s100b,threshold=0.9, method='expect',ci=TRUE, cp=0.95 )
 
 }
 \author{

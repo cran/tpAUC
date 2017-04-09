@@ -4,7 +4,7 @@
 \alias{proc.est}
 \title{Partial AUC Estimation}
 \usage{
-proc.est(response, predictor, threshold = 0.9, method = "MW", plot = TRUE,
+proc.est(response, predictor, threshold = 0.9, method = "MW",
   smooth = FALSE)
 }
 \arguments{
@@ -17,27 +17,25 @@ the first level will be defaultly regarded as negative.}
 
 \item{threshold}{numeric; false positive rate (FPR) constraint.}
 
-\item{method}{methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.}
-
-\item{plot}{logic; plot the ROC curve?}
+\item{method}{methods to estimate FPR-pAUC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.}
 
 \item{smooth}{if \code{TRUE}, the ROC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.}
 }
 \value{
-Estimation of FPR partial AUC and plot of ROC curve.
+Estimate of FPR partial AUC.
 }
 \description{
-Estimate the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+Estimate the area of region under ROC curve with pre-specific FPR constraint (FPR-pAUC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 }
 \details{
-This function estimates FPR partial AUC given response, predictor and pre-specific FPR constraint. The plot of corresponding ROC curve with pre-specific FPR is generated.
-         \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
+This function estimates FPR partial AUC given response, predictor and pre-specific FPR constraint.
+         \code{MW}: Mann-Whitney statistic. \code{expect}: method in (2.2) \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 }
 \examples{
 
 library('pROC')
 data(aSAH)
-proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=TRUE)
+proc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8)
 
 }
 \author{

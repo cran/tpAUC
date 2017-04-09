@@ -9,12 +9,11 @@
 #'    
 #' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
 #' @param threshold a length-two numeric vector; the first element is FPR threshold, the second is TPR.  
-#' @param plot  logic; plot the ROC curve? 
 #' @param smooth if \code{TRUE}, the ROC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.
 #' 
-#' @details This function estimates two-way partial AUC given response, predictor and pre-specific FPR/TPR constraints. The plot of corresponding ROC curve with pre-specific FPR/TPR is generated.
+#' @details This function estimates two-way partial AUC given response, predictor and pre-specific FPR/TPR constraints. 
 #'
-#' @return Estimation of two-way partial AUC and plot of ROC curve. 
+#' @return Estimate of two-way partial AUC. 
 #'
 #' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[pROC]{roc}}, \code{\link[tpAUC]{podc.est}}, \code{\link[tpAUC]{proc.est}}
@@ -23,7 +22,7 @@
 #' 
 #' library('pROC')
 #' data(aSAH)
-#' tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2),plot=TRUE)
+#' tproc.est(aSAH$outcome, aSAH$s100b, threshold=c(0.8,0.2))
 #' 
 #'
 #' @export 
@@ -32,7 +31,7 @@
 #' @importFrom   stats  approxfun runif
 #' @importFrom graphics lines abline
 #'          
-tproc.est=function(response, predictor, threshold=c(1,0), plot=TRUE, smooth=FALSE) {
+tproc.est=function(response, predictor, threshold=c(1,0), smooth=FALSE) {
   
   if ( any(is.na(response) | is.na(predictor))){
     warning('NA will be removed.')
@@ -99,23 +98,7 @@ tproc.est=function(response, predictor, threshold=c(1,0), plot=TRUE, smooth=FALS
     }
   }
   tpauc=sum(V)/(pos_size*neg_size) # estimated two-way partial AUC
-  
-  if (plot==TRUE) {
-    roc1=roc(response,predictor,smooth=smooth,plot=T)
-    xx=roc1$specificities
-    yy=roc1$sensitivities
-    xx2=sort(xx+1e-5 * runif(length(xx)))
-    f=approxfun(xx2,yy)
-    xx=roc1$specificities[(roc1$specificities > (1- FPR))  |(roc1$specificities == (1- FPR)) ]
-    yy=roc1$sensitivities[(length(roc1$sensitivities)-length(xx)):length(roc1$sensitivities)]
-    x0=c(seq(1-FPR,min(xx),length.out=1000),seq(min(xx),1,length.out=length(roc1$specificities)*10))
-    y0=f(x0)
-    y01=rep(TPR,length(y0))
-    yy0=as.vector(rbind(y01,y0))
-    lines(rep(x0,each=2),yy0,type='l',col='grey')
-    abline(v=(1-FPR),col='red',lwd="2")
-    abline(h=TPR,col='blue',lwd="2")
-  }
+ 
   
   return(tpauc)
 }

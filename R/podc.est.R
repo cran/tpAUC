@@ -1,6 +1,6 @@
 #' Partial ODC Estimation
 #'
-#' Estimate the area of region under ordinal dominance curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} for details.
+#' Estimate the area of region under ordinal dominance curve with pre-specific FNR constraint (FNR-pODC). See \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} for details.
 #' 
 #' @param response a factor, numeric or character vector of responses; 
 #'    typically encoded with 0 (negative) and 1 (positive). 
@@ -8,13 +8,12 @@
 #'    the first level will be defaultly regarded as negative.
 #' @param predictor a numeric vector of the same length than response, containing the predicted value of each observation. An ordered factor is coerced to a numeric.
 #' @param threshold numeric; false negative rate (FNR) constraint.
-#' @param method methods to estimate partial ODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
-#' @param plot  logic; plot the ODC curve? 
+#' @param method methods to estimate partial ODC. \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
 #' @param smooth if \code{TRUE}, the ODC curve is passed to \code{\link[pROC]{smooth}} to be smoothed.
 #' 
-#' @details This function estimates FNR partial ODC given response, predictor and pre-specific FNR constraint. The plot of corresponding ODC curve with pre-specific FNR is generated.
-#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/ss_newpaper/SS-13-367_na.pdf}{Yang et al., 2016}.
-#' @return Estimation of FNR partial ODC and plot of ODC curve. 
+#' @details This function estimates FNR partial ODC given response, predictor and pre-specific FNR constraint.  
+#'          \code{MW}: Mann-Whitney statistic. \code{expect}: method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017} adapted from \href{http://www.ncbi.nlm.nih.gov/pubmed/20729218}{Wang and Chang, 2011}. \code{jackknife}: jackknife method in \href{http://www3.stat.sinica.edu.tw/statistica/j27n1/j27n117/j27n117.html}{Yang et al., 2017}.
+#' @return Estimation of FNR partial ODC. 
 #'
 #' @author Hanfang Yang, Kun Lu, Xiang Lyu, Feifang Hu, Yichuan Zhao.
 #' @seealso \code{\link[tpAUC]{proc.est}}
@@ -23,7 +22,7 @@
 #' 
 #' library('pROC')
 #' data(aSAH)
-#' podc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8,plot=TRUE)
+#' podc.est(aSAH$outcome, aSAH$s100b, method='expect',threshold=0.8 )
 #' 
 #' @export 
 #'
@@ -31,7 +30,7 @@
 #' @importFrom    stats ecdf approxfun runif
 #' @importFrom graphics lines abline
 #'        
-podc.est=function(response,predictor,threshold=0.9,method='MW',plot=TRUE,smooth=FALSE) {
+podc.est=function(response,predictor,threshold=0.9,method='MW' ,smooth=FALSE) {
   
   if ( any(is.na(response) | is.na(predictor))){
     warning('NA will be removed.')
@@ -136,22 +135,7 @@ podc.est=function(response,predictor,threshold=0.9,method='MW',plot=TRUE,smooth=
     podc=mean(Uh)
   }
   
-  if (plot==TRUE) {
-    roc1=roc(response,predictor,smooth=smooth,plot=F)
-    yy=roc1$specificities
-    xx=1-roc1$sensitivities
-    plot(xx,yy,'l',lwd='2',xlab='FNR',ylab='Specificity')
-    xx2=sort(xx+1e-5 * runif(length(xx)))
-    f=approxfun(xx2,yy)
-    xx=xx[(xx <  FNR)  |(xx == FNR) ]
-    yy=yy[1:length(xx)]
-    x0=c(seq(0,max(xx),length.out=length(roc1$specificities)*10),seq(max(xx),FNR,length.out=1000))
-    y0=f(x0)
-    lines(x0,y0,type='h',col='grey')
-    abline(a=0,b=1,col='grey')
-    abline(v=FNR,col='red',lwd='2')
-  }
-  
+ 
   return(podc)
   
 }
